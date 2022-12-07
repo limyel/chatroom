@@ -2,6 +2,7 @@ package com.limyel.chatroom.protocol;
 
 import com.limyel.chatroom.constant.CommandConstant;
 import com.limyel.chatroom.protocol.request.LoginRequestPacket;
+import com.limyel.chatroom.protocol.response.LoginResponsePacket;
 import com.limyel.chatroom.serializer.Serializer;
 import com.limyel.chatroom.serializer.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
@@ -14,19 +15,24 @@ import java.util.Map;
  * 封装二进制数据包
  * @author limyel
  */
-public class PacketCodeC {
+public class PacketCodec {
 
     /**
      * 魔数
      */
     public static final int MAGIC_NUMBER = 0x12345678;
 
+    // todo 单例模式？
+    public static final PacketCodec INSTANCE = new PacketCodec();
+
     private final Map<Byte, Class<? extends AbstractPacket>> packetTypeMap;
+
     private final Map<Byte, Serializer> serializerMap;
 
-    public PacketCodeC() {
+    public PacketCodec() {
         packetTypeMap = new HashMap<>();
         packetTypeMap.put(CommandConstant.LOGIN_REQUEST, LoginRequestPacket.class);
+        packetTypeMap.put(CommandConstant.LOGIN_RESPONSE, LoginResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
