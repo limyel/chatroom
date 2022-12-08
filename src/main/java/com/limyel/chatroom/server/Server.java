@@ -3,6 +3,8 @@ package com.limyel.chatroom.server;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.codec.Spliter;
+import com.limyel.chatroom.server.handler.AuthHandler;
+import com.limyel.chatroom.server.handler.LifeCycleTestHandler;
 import com.limyel.chatroom.server.handler.LoginRequestHandler;
 import com.limyel.chatroom.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -35,6 +37,7 @@ public class Server {
                                 socketChannel.pipeline().addLast(new Spliter());
                                 socketChannel.pipeline().addLast(new PacketDecoder());
                                 socketChannel.pipeline().addLast(new LoginRequestHandler());
+                                socketChannel.pipeline().addLast(new AuthHandler());
                                 socketChannel.pipeline().addLast(new MessageRequestHandler());
                                 socketChannel.pipeline().addLast(new PacketEncoder());
                             }

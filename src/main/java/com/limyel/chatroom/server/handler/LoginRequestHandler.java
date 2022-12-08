@@ -2,6 +2,7 @@ package com.limyel.chatroom.server.handler;
 
 import com.limyel.chatroom.protocol.request.LoginRequestPacket;
 import com.limyel.chatroom.protocol.response.LoginResponsePacket;
+import com.limyel.chatroom.utils.LoginUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -17,6 +18,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
 
         if (valid(loginRequestPacket)) {
             loginResponsePacket.setSuccess(true);
+            LoginUtil.markAsLogin(channelHandlerContext.channel());
         } else {
             // todo 统一的 ErrorCode
             loginResponsePacket.setReason("账号密码校验失败");
