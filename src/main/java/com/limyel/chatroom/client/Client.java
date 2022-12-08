@@ -1,5 +1,8 @@
 package com.limyel.chatroom.client;
 
+import com.limyel.chatroom.client.console.ConsoleCommandManager;
+import com.limyel.chatroom.client.console.LoginConsoleCommand;
+import com.limyel.chatroom.client.handler.CreateGroupResponseHandler;
 import com.limyel.chatroom.client.handler.LoginResponseHandler;
 import com.limyel.chatroom.client.handler.MessageResponseHandler;
 import com.limyel.chatroom.codec.PacketDecoder;
@@ -42,6 +45,7 @@ public class Client {
                         socketChannel.pipeline().addLast(new PacketDecoder());
                         socketChannel.pipeline().addLast(new LoginResponseHandler());
                         socketChannel.pipeline().addLast(new MessageResponseHandler());
+                        socketChannel.pipeline().addLast(new CreateGroupResponseHandler());
                         socketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });
@@ -76,36 +80,17 @@ public class Client {
 
     private static void startConsoleThread(Channel channel) {
         Scanner scanner = new Scanner(System.in);
-        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+        LoginConsoleCommand loginConsoleCommand = new LoginConsoleCommand();
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
 
         new Thread(() -> {
             while (!Thread.interrupted()) {
                 if (!SessionUtil.hasLogin(channel)) {
-                    // 登录
-                    System.out.print("输入登录用户名：");
-                    String username = scanner.nextLine();
-                    System.out.print("输入登录密码：");
-                    String password = scanner.nextLine();
-
-                    loginRequestPacket.setUsername(username);
-                    loginRequestPacket.setPassword(password);
-
-                    channel.writeAndFlush(loginRequestPacket);
-                    waitForLoginResponse();
+                    loginConsoleCommand.exec(scanner, channel);
                 } else {
-                    Long toUserId = scanner.nextLong();
-                    String message = scanner.next();
-                    channel.writeAndFlush(new MessageRequestPacket(toUserId, message));
+                    consoleCommandManager.exec(scanner, channel);
                 }
             }
         }).start();
-    }
-
-    private static void waitForLoginResponse() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-
-        }
     }
 }

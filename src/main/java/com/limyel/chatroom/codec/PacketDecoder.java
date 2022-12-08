@@ -1,5 +1,6 @@
 package com.limyel.chatroom.codec;
 
+import com.limyel.chatroom.protocol.AbstractPacket;
 import com.limyel.chatroom.protocol.PacketCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -13,6 +14,7 @@ import java.util.List;
 public class PacketDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
-        list.add(PacketCodec.INSTANCE.decode(byteBuf));
+        AbstractPacket decode = PacketCodec.INSTANCE.decode(byteBuf);
+        list.add(decode);
     }
 }

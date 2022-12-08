@@ -1,8 +1,10 @@
 package com.limyel.chatroom.protocol;
 
 import com.limyel.chatroom.constant.CommandConstant;
+import com.limyel.chatroom.protocol.request.CreateGroupRequestPacket;
 import com.limyel.chatroom.protocol.request.LoginRequestPacket;
 import com.limyel.chatroom.protocol.request.MessageRequestPacket;
+import com.limyel.chatroom.protocol.response.CreateGroupResponsePacket;
 import com.limyel.chatroom.protocol.response.LoginResponsePacket;
 import com.limyel.chatroom.protocol.response.MessageResponsePacket;
 import com.limyel.chatroom.serializer.Serializer;
@@ -37,6 +39,8 @@ public class PacketCodec {
         packetTypeMap.put(CommandConstant.LOGIN_RESPONSE, LoginResponsePacket.class);
         packetTypeMap.put(CommandConstant.MESSAGE_REQUEST, MessageRequestPacket.class);
         packetTypeMap.put(CommandConstant.MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetTypeMap.put(CommandConstant.CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
+        packetTypeMap.put(CommandConstant.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
