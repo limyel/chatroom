@@ -44,9 +44,7 @@ public class PacketCodec {
     }
 
 
-    public ByteBuf encode(AbstractPacket packet) {
-        // 创建 ByteBuf 对象
-        ByteBuf buf = ByteBufAllocator.DEFAULT.ioBuffer();
+    public void encode(ByteBuf buf, AbstractPacket packet) {
         // 序列化 Java 对象
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
 
@@ -62,8 +60,6 @@ public class PacketCodec {
         buf.writeInt(bytes.length);
         // 数据包
         buf.writeBytes(bytes);
-
-        return buf;
     }
 
     public AbstractPacket decode(ByteBuf buf) {

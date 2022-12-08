@@ -1,11 +1,13 @@
 package com.limyel.chatroom.client;
 
-import com.limyel.chatroom.client.handler.ClientHandler;
-import com.limyel.chatroom.protocol.PacketCodec;
+import com.limyel.chatroom.client.handler.LoginResponseHandler;
+import com.limyel.chatroom.client.handler.MessageResponseHandler;
+import com.limyel.chatroom.codec.PacketDecoder;
+import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.protocol.request.MessageRequestPacket;
+import com.limyel.chatroom.protocol.response.MessageResponsePacket;
 import com.limyel.chatroom.utils.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -37,7 +39,10 @@ public class Client {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
-                        socketChannel.pipeline().addLast(new ClientHandler());
+                        socketChannel.pipeline().addLast(new PacketDecoder());
+                        socketChannel.pipeline().addLast(new LoginResponseHandler());
+                        socketChannel.pipeline().addLast(new MessageResponseHandler());
+                        socketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });
 
@@ -79,8 +84,7 @@ public class Client {
 
                     MessageRequestPacket packet = new MessageRequestPacket();
                     packet.setMessage(line);
-                    ByteBuf buf = PacketCodec.INSTANCE.encode(packet);
-                    channel.writeAndFlush(buf);
+                    channel.writeAndFlush(packet);
                 }
             }
         }).start();
