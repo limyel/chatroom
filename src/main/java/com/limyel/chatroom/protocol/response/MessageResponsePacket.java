@@ -12,6 +12,10 @@ import lombok.EqualsAndHashCode;
 @Data
 public class MessageResponsePacket extends AbstractPacket {
 
+    private Long fromUserId;
+
+    private String fromUsername;
+
     private String message;
 
     @Override

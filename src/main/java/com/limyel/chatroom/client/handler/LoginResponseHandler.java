@@ -2,7 +2,8 @@ package com.limyel.chatroom.client.handler;
 
 import com.limyel.chatroom.protocol.request.LoginRequestPacket;
 import com.limyel.chatroom.protocol.response.LoginResponsePacket;
-import com.limyel.chatroom.utils.LoginUtil;
+import com.limyel.chatroom.session.Session;
+import com.limyel.chatroom.utils.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -14,23 +15,20 @@ import java.util.Date;
 public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginResponsePacket> {
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        // 创建登录对象
-        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
-        loginRequestPacket.setUserId(1L);
-        loginRequestPacket.setUsername("limyel");
-        loginRequestPacket.setPassword("123456");
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, LoginResponsePacket loginResponsePacket) throws Exception {
+        Long userId = loginResponsePacket.getUserId();
+        String username = loginResponsePacket.getUsername();
 
-        ctx.channel().writeAndFlush(loginRequestPacket);
+        if (loginResponsePacket.isSuccess()) {
+            System.out.println("[" + username + "]登录成功，userId 为: " + loginResponsePacket.getUserId());
+            SessionUtil.bindSession(new Session(userId, username), channelHandlerContext.channel());
+        } else {
+            System.out.println("[" + username + "]登录失败，原因：" + loginResponsePacket.getReason());
+        }
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, LoginResponsePacket loginResponsePacket) throws Exception {
-        if (loginResponsePacket.isSuccess()) {
-            LoginUtil.markAsLogin(channelHandlerContext.channel());
-            System.out.println(new Date() + ": 客户端登录成功");
-        } else {
-            System.out.println(new Date() + ": 客户端登录失败，原因：" + loginResponsePacket.getReason());
-        }
+    public void channelInactive(ChannelHandlerContext ctx) {
+        System.out.println("客户端连接被关闭!");
     }
 }

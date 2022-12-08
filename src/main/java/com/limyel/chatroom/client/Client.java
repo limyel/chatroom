@@ -4,9 +4,9 @@ import com.limyel.chatroom.client.handler.LoginResponseHandler;
 import com.limyel.chatroom.client.handler.MessageResponseHandler;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
+import com.limyel.chatroom.protocol.request.LoginRequestPacket;
 import com.limyel.chatroom.protocol.request.MessageRequestPacket;
-import com.limyel.chatroom.protocol.response.MessageResponsePacket;
-import com.limyel.chatroom.utils.LoginUtil;
+import com.limyel.chatroom.utils.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -75,18 +75,37 @@ public class Client {
     }
 
     private static void startConsoleThread(Channel channel) {
+        Scanner scanner = new Scanner(System.in);
+        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                if (LoginUtil.hasLogin(channel)) {
-                    System.out.println("输入消息发送至服务端: ");
-                    Scanner scanner = new Scanner(System.in);
-                    String line = scanner.nextLine();
+                if (!SessionUtil.hasLogin(channel)) {
+                    // 登录
+                    System.out.print("输入登录用户名：");
+                    String username = scanner.nextLine();
+                    System.out.print("输入登录密码：");
+                    String password = scanner.nextLine();
 
-                    MessageRequestPacket packet = new MessageRequestPacket();
-                    packet.setMessage(line);
-                    channel.writeAndFlush(packet);
+                    loginRequestPacket.setUsername(username);
+                    loginRequestPacket.setPassword(password);
+
+                    channel.writeAndFlush(loginRequestPacket);
+                    waitForLoginResponse();
+                } else {
+                    Long toUserId = scanner.nextLong();
+                    String message = scanner.next();
+                    channel.writeAndFlush(new MessageRequestPacket(toUserId, message));
                 }
             }
         }).start();
+    }
+
+    private static void waitForLoginResponse() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+
+        }
     }
 }
