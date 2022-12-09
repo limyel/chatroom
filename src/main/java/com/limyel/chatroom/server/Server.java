@@ -36,7 +36,14 @@ public class Server {
                                 socketChannel.pipeline().addLast(new LoginRequestHandler());
                                 socketChannel.pipeline().addLast(new AuthHandler());
                                 socketChannel.pipeline().addLast(new MessageRequestHandler());
+                                // 创建群请求处理器
                                 socketChannel.pipeline().addLast(new CreateGroupRequestHandler());
+                                // 加群请求处理器
+                                socketChannel.pipeline().addLast(new JoinGroupRequestHandler());
+                                // 退群请求处理器
+                                socketChannel.pipeline().addLast(new QuitGroupRequestHandler());
+                                // 添加获取群成员请求处理器
+                                socketChannel.pipeline().addLast(new ListGroupMembersRequestHandler());
                                 socketChannel.pipeline().addLast(new PacketEncoder());
                             }
                         });
