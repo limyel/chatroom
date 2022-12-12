@@ -25,6 +25,7 @@ public class IMHandler extends SimpleChannelInboundHandler<AbstractPacket> {
         handlerMap.put(CommandConstant.QUIT_GROUP_REQUEST, QuitGroupRequestHandler.INSTANCE);
         handlerMap.put(CommandConstant.LIST_GROUP_MEMBERS_REQUEST, ListGroupMembersRequestHandler.INSTANCE);
         handlerMap.put(CommandConstant.GROUP_MESSAGE_REQUEST, GroupMessageRequestHandler.INSTANCE);
+        handlerMap.put(CommandConstant.LOGOUT_REQUEST, LogoutRequestHandler.INSTANCE);
     }
 
     @Override

@@ -55,6 +55,8 @@ public class Client {
                         socketChannel.pipeline().addLast(new ListGroupMembersResponseHandler());
                         // 群消息响应处理器
                         socketChannel.pipeline().addLast(new GroupMessageResponseHandler());
+                        // 登出响应处理器
+                        socketChannel.pipeline().addLast(new LogoutResponseHandler());
                         socketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });
