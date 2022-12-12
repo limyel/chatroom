@@ -13,8 +13,8 @@ public abstract class AbstractPacket {
     /**
      * 协议版本
      */
-    @JsonIgnore
-    private Byte version = 1;
+//    @JsonIgnore
+    protected Byte version = 1;
 
     /**
      * 指令

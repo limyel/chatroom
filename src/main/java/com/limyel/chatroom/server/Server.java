@@ -37,6 +37,7 @@ public class Server {
                                 socketChannel.pipeline().addLast(new Spliter());
                                 socketChannel.pipeline().addLast(PacketCodecHandler.INSTANCE);
                                 socketChannel.pipeline().addLast(LoginRequestHandler.INSTANCE);
+                                socketChannel.pipeline().addLast(HeartBeatRequestHandler.INSTANCE);
                                 socketChannel.pipeline().addLast(AuthHandler.INSTANCE);
                                 socketChannel.pipeline().addLast(IMHandler.INSTANCE);
                             }

@@ -1,12 +1,8 @@
 package com.limyel.chatroom.protocol;
 
 import com.limyel.chatroom.constant.CommandConstant;
-import com.limyel.chatroom.protocol.request.CreateGroupRequestPacket;
-import com.limyel.chatroom.protocol.request.LoginRequestPacket;
-import com.limyel.chatroom.protocol.request.MessageRequestPacket;
-import com.limyel.chatroom.protocol.response.CreateGroupResponsePacket;
-import com.limyel.chatroom.protocol.response.LoginResponsePacket;
-import com.limyel.chatroom.protocol.response.MessageResponsePacket;
+import com.limyel.chatroom.protocol.request.*;
+import com.limyel.chatroom.protocol.response.*;
 import com.limyel.chatroom.serializer.Serializer;
 import com.limyel.chatroom.serializer.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
@@ -41,6 +37,16 @@ public class PacketCodec {
         packetTypeMap.put(CommandConstant.MESSAGE_RESPONSE, MessageResponsePacket.class);
         packetTypeMap.put(CommandConstant.CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
         packetTypeMap.put(CommandConstant.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        packetTypeMap.put(CommandConstant.JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
+        packetTypeMap.put(CommandConstant.JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
+        packetTypeMap.put(CommandConstant.QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        packetTypeMap.put(CommandConstant.QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
+        packetTypeMap.put(CommandConstant.LIST_GROUP_MEMBERS_REQUEST, ListGroupMembersRequestPacket.class);
+        packetTypeMap.put(CommandConstant.LIST_GROUP_MEMBERS_RESPONSE, ListGroupMembersResponsePacket.class);
+        packetTypeMap.put(CommandConstant.GROUP_MESSAGE_REQUEST, GroupMessageRequestPacket.class);
+        packetTypeMap.put(CommandConstant.GROUP_MESSAGE_RESPONSE, GroupMessageResponsePacket.class);
+        packetTypeMap.put(CommandConstant.HEARTBEAT_REQUEST, HeartBeatRequestPacket.class);
+        packetTypeMap.put(CommandConstant.HEARTBEAT_RESPONSE, HeartBeatResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();

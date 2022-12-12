@@ -62,6 +62,7 @@ public class Client {
                         // 登出响应处理器
                         socketChannel.pipeline().addLast(new LogoutResponseHandler());
                         socketChannel.pipeline().addLast(new PacketEncoder());
+                        socketChannel.pipeline().addLast(new HeartBeatTimerHandler());
                     }
                 });
 

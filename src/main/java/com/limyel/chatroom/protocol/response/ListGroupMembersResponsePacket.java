@@ -21,6 +21,6 @@ public class ListGroupMembersResponsePacket extends AbstractPacket {
 
     @Override
     public Byte getCommand() {
-        return CommandConstant.LIST_GROUP_MEMBERS_REQUEST;
+        return CommandConstant.LIST_GROUP_MEMBERS_RESPONSE;
     }
 }
