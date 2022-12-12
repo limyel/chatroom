@@ -5,6 +5,8 @@ import com.limyel.chatroom.client.console.LoginConsoleCommand;
 import com.limyel.chatroom.client.handler.*;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
+import com.limyel.chatroom.codec.Spliter;
+import com.limyel.chatroom.handler.IMIdleStateHandler;
 import com.limyel.chatroom.protocol.request.LoginRequestPacket;
 import com.limyel.chatroom.protocol.request.MessageRequestPacket;
 import com.limyel.chatroom.protocol.response.QuitGroupResponsePacket;
@@ -42,6 +44,8 @@ public class Client {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        socketChannel.pipeline().addLast(new IMIdleStateHandler());
+                        socketChannel.pipeline().addLast(new Spliter());
                         socketChannel.pipeline().addLast(new PacketDecoder());
                         socketChannel.pipeline().addLast(new LoginResponseHandler());
                         socketChannel.pipeline().addLast(new MessageResponseHandler());

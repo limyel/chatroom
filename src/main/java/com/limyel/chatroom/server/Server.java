@@ -4,6 +4,7 @@ import com.limyel.chatroom.codec.PacketCodecHandler;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.codec.Spliter;
+import com.limyel.chatroom.handler.IMIdleStateHandler;
 import com.limyel.chatroom.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -32,6 +33,7 @@ public class Server {
                         ch.pipeline().addLast(new ChannelInitializer<SocketChannel>() {
                             @Override
                             protected void initChannel(SocketChannel socketChannel) throws Exception {
+                                socketChannel.pipeline().addLast(new IMIdleStateHandler());
                                 socketChannel.pipeline().addLast(new Spliter());
                                 socketChannel.pipeline().addLast(PacketCodecHandler.INSTANCE);
                                 socketChannel.pipeline().addLast(LoginRequestHandler.INSTANCE);
