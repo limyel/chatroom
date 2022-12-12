@@ -36,17 +36,7 @@ public class Server {
                                 socketChannel.pipeline().addLast(PacketCodecHandler.INSTANCE);
                                 socketChannel.pipeline().addLast(LoginRequestHandler.INSTANCE);
                                 socketChannel.pipeline().addLast(AuthHandler.INSTANCE);
-                                socketChannel.pipeline().addLast(MessageRequestHandler.INSTANCE);
-                                // 创建群请求处理器
-                                socketChannel.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);
-                                // 加群请求处理器
-                                socketChannel.pipeline().addLast(JoinGroupRequestHandler.INSTANCE);
-                                // 退群请求处理器
-                                socketChannel.pipeline().addLast(QuitGroupRequestHandler.INSTANCE);
-                                // 添加获取群成员请求处理器
-                                socketChannel.pipeline().addLast(ListGroupMembersRequestHandler.INSTANCE);
-                                // 群消息请求处理器
-                                socketChannel.pipeline().addLast(GroupMessageRequestHandler.INSTANCE);
+                                socketChannel.pipeline().addLast(IMHandler.INSTANCE);
                             }
                         });
                     }
