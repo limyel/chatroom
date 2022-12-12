@@ -2,14 +2,12 @@ package com.limyel.chatroom.client;
 
 import com.limyel.chatroom.client.console.ConsoleCommandManager;
 import com.limyel.chatroom.client.console.LoginConsoleCommand;
-import com.limyel.chatroom.client.handler.CreateGroupResponseHandler;
-import com.limyel.chatroom.client.handler.JoinGroupResponseHandler;
-import com.limyel.chatroom.client.handler.LoginResponseHandler;
-import com.limyel.chatroom.client.handler.MessageResponseHandler;
+import com.limyel.chatroom.client.handler.*;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.protocol.request.LoginRequestPacket;
 import com.limyel.chatroom.protocol.request.MessageRequestPacket;
+import com.limyel.chatroom.protocol.response.QuitGroupResponsePacket;
 import com.limyel.chatroom.server.handler.QuitGroupRequestHandler;
 import com.limyel.chatroom.utils.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -52,7 +50,11 @@ public class Client {
                         // 加群响应处理器
                         socketChannel.pipeline().addLast(new JoinGroupResponseHandler());
                         // 退群响应处理器
-                        socketChannel.pipeline().addLast(new QuitGroupRequestHandler());
+                        socketChannel.pipeline().addLast(new QuitGroupResponseHandler());
+                        // 获取群成员响应处理器
+                        socketChannel.pipeline().addLast(new ListGroupMembersResponseHandler());
+                        // 群消息响应处理器
+                        socketChannel.pipeline().addLast(new GroupMessageResponseHandler());
                         socketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });

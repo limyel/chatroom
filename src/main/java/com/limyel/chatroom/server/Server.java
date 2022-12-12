@@ -1,5 +1,6 @@
 package com.limyel.chatroom.server;
 
+import com.limyel.chatroom.codec.PacketCodecHandler;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.codec.Spliter;
@@ -32,19 +33,20 @@ public class Server {
                             @Override
                             protected void initChannel(SocketChannel socketChannel) throws Exception {
                                 socketChannel.pipeline().addLast(new Spliter());
-                                socketChannel.pipeline().addLast(new PacketDecoder());
-                                socketChannel.pipeline().addLast(new LoginRequestHandler());
-                                socketChannel.pipeline().addLast(new AuthHandler());
-                                socketChannel.pipeline().addLast(new MessageRequestHandler());
+                                socketChannel.pipeline().addLast(PacketCodecHandler.INSTANCE);
+                                socketChannel.pipeline().addLast(LoginRequestHandler.INSTANCE);
+                                socketChannel.pipeline().addLast(AuthHandler.INSTANCE);
+                                socketChannel.pipeline().addLast(MessageRequestHandler.INSTANCE);
                                 // 创建群请求处理器
-                                socketChannel.pipeline().addLast(new CreateGroupRequestHandler());
+                                socketChannel.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);
                                 // 加群请求处理器
-                                socketChannel.pipeline().addLast(new JoinGroupRequestHandler());
+                                socketChannel.pipeline().addLast(JoinGroupRequestHandler.INSTANCE);
                                 // 退群请求处理器
-                                socketChannel.pipeline().addLast(new QuitGroupRequestHandler());
+                                socketChannel.pipeline().addLast(QuitGroupRequestHandler.INSTANCE);
                                 // 添加获取群成员请求处理器
-                                socketChannel.pipeline().addLast(new ListGroupMembersRequestHandler());
-                                socketChannel.pipeline().addLast(new PacketEncoder());
+                                socketChannel.pipeline().addLast(ListGroupMembersRequestHandler.INSTANCE);
+                                // 群消息请求处理器
+                                socketChannel.pipeline().addLast(GroupMessageRequestHandler.INSTANCE);
                             }
                         });
                     }
