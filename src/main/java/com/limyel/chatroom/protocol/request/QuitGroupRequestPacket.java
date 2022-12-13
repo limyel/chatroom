@@ -1,5 +1,6 @@
 package com.limyel.chatroom.protocol.request;
 
+import com.limyel.chatroom.constant.CommandConstant;
 import com.limyel.chatroom.protocol.AbstractPacket;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,6 +16,6 @@ public class QuitGroupRequestPacket extends AbstractPacket {
 
     @Override
     public Byte getCommand() {
-        return null;
+        return CommandConstant.QUIT_GROUP_REQUEST;
     }
 }
