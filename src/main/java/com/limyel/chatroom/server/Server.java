@@ -4,6 +4,7 @@ import com.limyel.chatroom.codec.PacketCodecHandler;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.codec.Spliter;
+import com.limyel.chatroom.config.ChatroomConfig;
 import com.limyel.chatroom.handler.IMIdleStateHandler;
 import com.limyel.chatroom.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
@@ -13,15 +14,28 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.Date;
 
+@Component
 public class Server {
 
     private static final int PORT = 8000;
 
-    public static void main(String[] args) {
-        ServerBootstrap serverBootstrap = new ServerBootstrap();
+    @Autowired
+    private PacketCodecHandler packetCodecHandler;
+
+    private ServerBootstrap serverBootstrap;
+
+    @PostConstruct
+    public void init() {
+        serverBootstrap = new ServerBootstrap();
 
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
@@ -37,7 +51,7 @@ public class Server {
                                 ChannelPipeline pipeline = socketChannel.pipeline();
                                 pipeline.addLast(new IMIdleStateHandler());
                                 pipeline.addLast(new Spliter());
-                                pipeline.addLast(PacketCodecHandler.INSTANCE);
+                                pipeline.addLast(packetCodecHandler);
                                 pipeline.addLast(LoginRequestHandler.INSTANCE);
                                 pipeline.addLast(HeartBeatRequestHandler.INSTANCE);
                                 pipeline.addLast(AuthHandler.INSTANCE);
@@ -46,6 +60,9 @@ public class Server {
                         });
                     }
                 });
+    }
+
+    public void start() {
         bind(serverBootstrap, PORT);
     }
 
@@ -54,7 +71,7 @@ public class Server {
      * @param serverBootstrap
      * @param port
      */
-    private static void bind(final ServerBootstrap serverBootstrap, final int port) {
+    private void bind(final ServerBootstrap serverBootstrap, final int port) {
         serverBootstrap.bind(port).addListener(future -> {
             if (future.isSuccess()) {
                 System.out.println(new Date() + ": 端口[" + port + "]绑定成功！");

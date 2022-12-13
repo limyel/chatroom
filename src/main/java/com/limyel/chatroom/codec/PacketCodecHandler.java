@@ -7,27 +7,27 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 @ChannelHandler.Sharable
 public class PacketCodecHandler extends MessageToMessageCodec<ByteBuf, AbstractPacket> {
 
-    public static final PacketCodecHandler INSTANCE = new PacketCodecHandler();
-
-    private PacketCodecHandler() {
-
-    }
+    @Autowired
+    private PacketCodec packetCodec;
 
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, AbstractPacket packet, List<Object> list) throws Exception {
         ByteBuf buf = channelHandlerContext.channel().alloc().ioBuffer();
-        PacketCodec.INSTANCE.encode(buf, packet);
+        packetCodec.encode(buf, packet);
         list.add(buf);
     }
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf buf, List<Object> list) throws Exception {
-        list.add(PacketCodec.INSTANCE.decode(buf));
+        list.add(packetCodec.decode(buf));
     }
 }

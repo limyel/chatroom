@@ -7,7 +7,9 @@ import com.limyel.chatroom.serializer.Serializer;
 import com.limyel.chatroom.serializer.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import java.util.Map;
  * 封装二进制数据包
  * @author limyel
  */
+@Component
 public class PacketCodec {
 
     /**
@@ -22,14 +25,12 @@ public class PacketCodec {
      */
     public static final int MAGIC_NUMBER = 0x12345678;
 
-    // todo 单例模式？
-    public static final PacketCodec INSTANCE = new PacketCodec();
+    private Map<Byte, Class<? extends AbstractPacket>> packetTypeMap;
 
-    private final Map<Byte, Class<? extends AbstractPacket>> packetTypeMap;
+    private Map<Byte, Serializer> serializerMap;
 
-    private final Map<Byte, Serializer> serializerMap;
-
-    public PacketCodec() {
+    @PostConstruct
+    public void init() {
         packetTypeMap = new HashMap<>();
         packetTypeMap.put(CommandConstant.LOGIN_REQUEST, LoginRequestPacket.class);
         packetTypeMap.put(CommandConstant.LOGIN_RESPONSE, LoginResponsePacket.class);

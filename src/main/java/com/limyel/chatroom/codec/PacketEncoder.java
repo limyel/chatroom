@@ -5,13 +5,20 @@ import com.limyel.chatroom.protocol.PacketCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author limyel
  */
+@Component
 public class PacketEncoder extends MessageToByteEncoder<AbstractPacket> {
+
+    @Autowired
+    private PacketCodec packetCodec;
+
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, AbstractPacket packet, ByteBuf byteBuf) throws Exception {
-        PacketCodec.INSTANCE.encode(byteBuf, packet);
+        packetCodec.encode(byteBuf, packet);
     }
 }
