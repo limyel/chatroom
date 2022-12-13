@@ -8,6 +8,7 @@ import com.limyel.chatroom.handler.IMIdleStateHandler;
 import com.limyel.chatroom.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -33,13 +34,14 @@ public class Server {
                         ch.pipeline().addLast(new ChannelInitializer<SocketChannel>() {
                             @Override
                             protected void initChannel(SocketChannel socketChannel) throws Exception {
-                                socketChannel.pipeline().addLast(new IMIdleStateHandler());
-                                socketChannel.pipeline().addLast(new Spliter());
-                                socketChannel.pipeline().addLast(PacketCodecHandler.INSTANCE);
-                                socketChannel.pipeline().addLast(LoginRequestHandler.INSTANCE);
-                                socketChannel.pipeline().addLast(HeartBeatRequestHandler.INSTANCE);
-                                socketChannel.pipeline().addLast(AuthHandler.INSTANCE);
-                                socketChannel.pipeline().addLast(IMHandler.INSTANCE);
+                                ChannelPipeline pipeline = socketChannel.pipeline();
+                                pipeline.addLast(new IMIdleStateHandler());
+                                pipeline.addLast(new Spliter());
+                                pipeline.addLast(PacketCodecHandler.INSTANCE);
+                                pipeline.addLast(LoginRequestHandler.INSTANCE);
+                                pipeline.addLast(HeartBeatRequestHandler.INSTANCE);
+                                pipeline.addLast(AuthHandler.INSTANCE);
+                                pipeline.addLast(IMHandler.INSTANCE);
                             }
                         });
                     }
