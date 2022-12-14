@@ -3,9 +3,11 @@ package com.limyel.chatroom.client.handler;
 import com.limyel.chatroom.protocol.request.HeartBeatRequestPacket;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class HeartBeatTimerHandler extends ChannelInboundHandlerAdapter {
 
     private static final int HEARTBEAT_INTERVAL = 5;

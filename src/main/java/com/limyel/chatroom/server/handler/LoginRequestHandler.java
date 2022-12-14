@@ -7,20 +7,16 @@ import com.limyel.chatroom.utils.SessionUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 /**
  * @author limyel
  */
+@Component
 @ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
-
-    public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
-
-    private LoginRequestHandler() {
-
-    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, LoginRequestPacket loginRequestPacket) throws Exception {

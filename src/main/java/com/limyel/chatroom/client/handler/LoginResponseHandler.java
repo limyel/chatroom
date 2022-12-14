@@ -6,12 +6,14 @@ import com.limyel.chatroom.session.Session;
 import com.limyel.chatroom.utils.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 /**
  * @author limyel
  */
+@Component
 public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginResponsePacket> {
 
     @Override

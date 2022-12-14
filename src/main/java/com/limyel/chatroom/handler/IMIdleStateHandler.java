@@ -3,9 +3,13 @@ package com.limyel.chatroom.handler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
+@Component
+@Scope("prototype")
 public class IMIdleStateHandler extends IdleStateHandler {
 
     private static final int READER_IDLE_TIME = 15;

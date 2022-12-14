@@ -19,7 +19,10 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -27,16 +30,53 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author limyel
  */
+@Component
 public class Client {
 
-    private static final int MAX_RETRY = 5;
+    private final int MAX_RETRY = 5;
 
-    private static final String HOST = "127.0.0.1";
+    private final String HOST = "127.0.0.1";
 
-    private static final int PORT = 8000;
+    private final int PORT = 8000;
 
-    public static void main(String[] args) throws InterruptedException {
-        Bootstrap bootstrap = new Bootstrap();
+    private Bootstrap bootstrap;
+
+    @Autowired
+    private PacketDecoder packetDecoder;
+
+    @Autowired
+    private LoginResponseHandler loginResponseHandler;
+
+    @Autowired
+    private MessageResponseHandler messageResponseHandler;
+
+    @Autowired
+    private CreateGroupResponseHandler createGroupResponseHandler;
+
+    @Autowired
+    private JoinGroupResponseHandler joinGroupResponseHandler;
+
+    @Autowired
+    private QuitGroupResponseHandler quitGroupResponseHandler;
+
+    @Autowired
+    private ListGroupMembersResponseHandler listGroupMembersResponseHandler;
+
+    @Autowired
+    private LogoutResponseHandler logoutResponseHandler;
+
+    @Autowired
+    private GroupMessageResponseHandler groupMessageResponseHandler;
+
+    @Autowired
+    private PacketEncoder packetEncoder;
+
+    @Autowired
+    private HeartBeatTimerHandler heartBeatTimerHandler;
+
+    @PostConstruct
+    public void init() throws InterruptedException {
+        bootstrap = new Bootstrap();
         NioEventLoopGroup group = new NioEventLoopGroup();
 
         bootstrap.group(group)
@@ -46,31 +86,32 @@ public class Client {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         socketChannel.pipeline().addLast(new IMIdleStateHandler());
                         socketChannel.pipeline().addLast(new Spliter());
-                        socketChannel.pipeline().addLast(new PacketDecoder());
-                        socketChannel.pipeline().addLast(new LoginResponseHandler());
-                        socketChannel.pipeline().addLast(new MessageResponseHandler());
+                        socketChannel.pipeline().addLast(packetDecoder);
+                        socketChannel.pipeline().addLast(loginResponseHandler);
+                        socketChannel.pipeline().addLast(messageResponseHandler);
                         // 创建群聊响应处理器
-                        socketChannel.pipeline().addLast(new CreateGroupResponseHandler());
+                        socketChannel.pipeline().addLast(createGroupResponseHandler);
                         // 加群响应处理器
-                        socketChannel.pipeline().addLast(new JoinGroupResponseHandler());
+                        socketChannel.pipeline().addLast(joinGroupResponseHandler);
                         // 退群响应处理器
-                        socketChannel.pipeline().addLast(new QuitGroupResponseHandler());
+                        socketChannel.pipeline().addLast(quitGroupResponseHandler);
                         // 获取群成员响应处理器
-                        socketChannel.pipeline().addLast(new ListGroupMembersResponseHandler());
+                        socketChannel.pipeline().addLast(listGroupMembersResponseHandler);
                         // 群消息响应处理器
-                        socketChannel.pipeline().addLast(new GroupMessageResponseHandler());
+                        socketChannel.pipeline().addLast(groupMessageResponseHandler);
                         // 登出响应处理器
-                        socketChannel.pipeline().addLast(new LogoutResponseHandler());
-                        socketChannel.pipeline().addLast(new PacketEncoder());
-                        socketChannel.pipeline().addLast(new HeartBeatTimerHandler());
+                        socketChannel.pipeline().addLast(logoutResponseHandler);
+                        socketChannel.pipeline().addLast(packetEncoder);
+                        socketChannel.pipeline().addLast(heartBeatTimerHandler);
                     }
                 });
-
-        connect(bootstrap, HOST, PORT, MAX_RETRY);
-
     }
 
-    private static void connect(Bootstrap bootstrap, String host, int port, int retry) {
+    public void start() {
+        connect(bootstrap, HOST, PORT, MAX_RETRY);
+    }
+
+    private void connect(Bootstrap bootstrap, String host, int port, int retry) {
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
                 Channel channel = ((ChannelFuture) future).channel();

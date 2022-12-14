@@ -31,6 +31,18 @@ public class Server {
     @Autowired
     private PacketCodecHandler packetCodecHandler;
 
+    @Autowired
+    private LoginRequestHandler loginRequestHandler;
+
+    @Autowired
+    private HeartBeatRequestHandler heartBeatRequestHandler;
+
+    @Autowired
+    private AuthHandler authHandler;
+
+    @Autowired
+    private IMHandler imHandler;
+
     private ServerBootstrap serverBootstrap;
 
     @PostConstruct
@@ -52,10 +64,10 @@ public class Server {
                                 pipeline.addLast(new IMIdleStateHandler());
                                 pipeline.addLast(new Spliter());
                                 pipeline.addLast(packetCodecHandler);
-                                pipeline.addLast(LoginRequestHandler.INSTANCE);
-                                pipeline.addLast(HeartBeatRequestHandler.INSTANCE);
-                                pipeline.addLast(AuthHandler.INSTANCE);
-                                pipeline.addLast(IMHandler.INSTANCE);
+                                pipeline.addLast(loginRequestHandler);
+                                pipeline.addLast(heartBeatRequestHandler);
+                                pipeline.addLast(authHandler);
+                                pipeline.addLast(imHandler);
                             }
                         });
                     }

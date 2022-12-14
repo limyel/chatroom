@@ -7,6 +7,10 @@ import com.limyel.chatroom.serializer.Serializer;
 import com.limyel.chatroom.serializer.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -18,7 +22,7 @@ import java.util.Map;
  * @author limyel
  */
 @Component
-public class PacketCodec {
+public class PacketCodec implements ApplicationContextAware {
 
     /**
      * 魔数
@@ -28,6 +32,9 @@ public class PacketCodec {
     private Map<Byte, Class<? extends AbstractPacket>> packetTypeMap;
 
     private Map<Byte, Serializer> serializerMap;
+
+    @Autowired
+    private Serializer serializer;
 
     @PostConstruct
     public void init() {
@@ -57,14 +64,14 @@ public class PacketCodec {
 
     public void encode(ByteBuf buf, AbstractPacket packet) {
         // 序列化 Java 对象
-        byte[] bytes = Serializer.DEFAULT.serialize(packet);
+        byte[] bytes = serializer.serialize(packet);
 
         // 魔数
         buf.writeInt(MAGIC_NUMBER);
         // 版本
         buf.writeByte(packet.getVersion());
         // 序列化算法
-        buf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
+        buf.writeByte(serializer.getSerializerAlgorithm());
         // 指令
         buf.writeByte(packet.getCommand());
         // 数据包长度
@@ -108,5 +115,10 @@ public class PacketCodec {
 
     private Class<? extends AbstractPacket> getRequestType(byte command) {
         return packetTypeMap.get(command);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+
     }
 }

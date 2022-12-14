@@ -4,9 +4,6 @@ import com.limyel.chatroom.serializer.impl.JSONSerializer;
 
 public interface Serializer {
 
-    byte JSON_SERIALIZER = 1;
-    Serializer DEFAULT = new JSONSerializer();
-
     /**
      * 序列化算法
      * @return

@@ -22,7 +22,11 @@ public class LoginConsoleCommand implements ConsoleCommand {
         loginRequestPacket.setUsername(username);
         loginRequestPacket.setPassword(password);
 
-        channel.writeAndFlush(loginRequestPacket);
+        channel.writeAndFlush(loginRequestPacket).addListener(future -> {
+            if (!future.isSuccess()) {
+                future.cause().printStackTrace();
+            }
+        });
         waitForLoginResponse();
     }
 
@@ -30,7 +34,7 @@ public class LoginConsoleCommand implements ConsoleCommand {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-
+            e.printStackTrace();
         }
     }
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.limyel.chatroom.constant.SerializerAlgorithmConstant;
 import com.limyel.chatroom.serializer.Serializer;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 

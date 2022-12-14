@@ -3,10 +3,12 @@ package com.limyel.chatroom.client.handler;
 import com.limyel.chatroom.protocol.response.JoinGroupResponsePacket;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.springframework.stereotype.Component;
 
 /**
  * @author limyel
  */
+@Component
 public class JoinGroupResponseHandler extends SimpleChannelInboundHandler<JoinGroupResponsePacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, JoinGroupResponsePacket joinGroupResponsePacket) throws Exception {

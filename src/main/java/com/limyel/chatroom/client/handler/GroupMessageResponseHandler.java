@@ -4,7 +4,9 @@ import com.limyel.chatroom.protocol.response.GroupMessageResponsePacket;
 import com.limyel.chatroom.session.Session;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GroupMessageResponseHandler extends SimpleChannelInboundHandler<GroupMessageResponsePacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GroupMessageResponsePacket responsePacket) throws Exception {

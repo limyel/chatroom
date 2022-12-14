@@ -6,11 +6,13 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
  * @author limyel
  */
+@Lazy
 @Component
 public class PacketEncoder extends MessageToByteEncoder<AbstractPacket> {
 

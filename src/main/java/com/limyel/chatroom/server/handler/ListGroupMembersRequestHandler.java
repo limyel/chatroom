@@ -7,6 +7,7 @@ import com.limyel.chatroom.utils.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,13 +15,8 @@ import java.util.stream.Collectors;
 /**
  * @author limyel
  */
+@Component
 public class ListGroupMembersRequestHandler extends SimpleChannelInboundHandler<ListGroupMembersRequestPacket> {
-
-    public static final ListGroupMembersRequestHandler INSTANCE = new ListGroupMembersRequestHandler();
-
-    private ListGroupMembersRequestHandler() {
-
-    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ListGroupMembersRequestPacket listGroupMembersRequestPacket) throws Exception {
