@@ -5,6 +5,8 @@ import com.limyel.chatroom.protocol.PacketCodeC;
 import com.limyel.chatroom.protocol.command.Command;
 import com.limyel.chatroom.protocol.request.LoginRequestPacket;
 import com.limyel.chatroom.protocol.response.LoginResponsePacket;
+import com.limyel.chatroom.protocol.response.MsgResponsePacket;
+import com.limyel.chatroom.util.LoginUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -36,13 +38,18 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         Packet packet = PacketCodeC.INSTANCE.decode(byteBuf);
 
         if (packet.getCommand().equals(Command.LOGIN_RESPONSE)) {
-            var responsePacket = (LoginResponsePacket) packet;
+            LoginResponsePacket responsePacket = (LoginResponsePacket) packet;
 
             if (responsePacket.getSuccess()) {
+                // 标记为已登录
+                LoginUtil.markAsLogin(ctx.channel());
                 System.out.println(LocalDateTime.now() + "：客户端登录成功");
             } else {
                 System.out.println(LocalDateTime.now() + "：客户端登录失败，原因：" + responsePacket.getReason());
             }
+        } if (packet.getCommand().equals(Command.MSG_RESPONSE)) {
+            MsgResponsePacket responsePacket = (MsgResponsePacket) packet;
+            System.out.println(LocalDateTime.now() + "：收到服务端消息：" + responsePacket.getMsg());
         }
     }
 }
