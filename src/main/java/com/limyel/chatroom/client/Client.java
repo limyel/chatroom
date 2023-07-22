@@ -1,4 +1,4 @@
-package com.limyel.chatroom;
+package com.limyel.chatroom.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -21,8 +21,7 @@ public class Client {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
-                        // 该连接的处理逻辑链，责任链模式
-                        nioSocketChannel.pipeline().addLast(new FirstClientHandler());
+                        nioSocketChannel.pipeline().addLast(new ClientHandler());
                     }
                 });
 

@@ -1,22 +1,10 @@
-package com.limyel.chatroom;
+package com.limyel.chatroom.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
 
 public class Server {
     public static void main(String[] args) {
@@ -37,7 +25,8 @@ public class Server {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
-                        nioSocketChannel.pipeline().addLast(new FirstServerHandler());
+                        // 该连接的处理逻辑链，责任链模式
+                        nioSocketChannel.pipeline().addLast(new ServerHandler());
                     }
                 });
 
