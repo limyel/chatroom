@@ -3,6 +3,7 @@ package com.limyel.chatroom.server;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.codec.Spliter;
+import com.limyel.chatroom.server.handler.AuthHandler;
 import com.limyel.chatroom.server.handler.LoginRequestHandler;
 import com.limyel.chatroom.server.handler.MsgRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -10,7 +11,6 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 public class Server {
     public static void main(String[] args) {
@@ -36,6 +36,7 @@ public class Server {
                         nioSocketChannel.pipeline().addLast(new Spliter());
                         nioSocketChannel.pipeline().addLast(new PacketDecoder());
                         nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new AuthHandler());
                         nioSocketChannel.pipeline().addLast(new MsgRequestHandler());
                         nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }

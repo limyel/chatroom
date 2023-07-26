@@ -3,6 +3,7 @@ package com.limyel.chatroom.server.handler;
 import com.limyel.chatroom.protocol.PacketCodeC;
 import com.limyel.chatroom.protocol.request.LoginRequestPacket;
 import com.limyel.chatroom.protocol.response.LoginResponsePacket;
+import com.limyel.chatroom.util.LoginUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -15,6 +16,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         // 校验登录
         if (valid(loginRequestPacket)) {
             responsePacket.setSuccess(true);
+            LoginUtil.markAsLogin(channelHandlerContext.channel());
         }
 
         channelHandlerContext.channel().writeAndFlush(responsePacket);
