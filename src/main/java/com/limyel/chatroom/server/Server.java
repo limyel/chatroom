@@ -2,6 +2,7 @@ package com.limyel.chatroom.server;
 
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
+import com.limyel.chatroom.codec.Spliter;
 import com.limyel.chatroom.server.handler.LoginRequestHandler;
 import com.limyel.chatroom.server.handler.MsgRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -9,6 +10,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 public class Server {
     public static void main(String[] args) {
@@ -30,6 +32,8 @@ public class Server {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
                         // 该连接的处理逻辑链，责任链模式
+                        // 拆包
+                        nioSocketChannel.pipeline().addLast(new Spliter());
                         nioSocketChannel.pipeline().addLast(new PacketDecoder());
                         nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
                         nioSocketChannel.pipeline().addLast(new MsgRequestHandler());
