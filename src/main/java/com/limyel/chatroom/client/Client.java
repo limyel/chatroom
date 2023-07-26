@@ -1,5 +1,9 @@
 package com.limyel.chatroom.client;
 
+import com.limyel.chatroom.client.handler.LoginResponseHandler;
+import com.limyel.chatroom.client.handler.MsgResponseHandler;
+import com.limyel.chatroom.codec.PacketDecoder;
+import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.protocol.PacketCodeC;
 import com.limyel.chatroom.protocol.request.MsgRequestPacket;
 import com.limyel.chatroom.util.LoginUtil;
@@ -28,11 +32,14 @@ public class Client {
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
-                        nioSocketChannel.pipeline().addLast(new ClientHandler());
+                        nioSocketChannel.pipeline().addLast(new PacketDecoder());
+                        nioSocketChannel.pipeline().addLast(new LoginResponseHandler());
+                        nioSocketChannel.pipeline().addLast(new MsgResponseHandler());
+                        nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });
 
-        connect(bootstrap, "localhost", 8080, 5);
+        connect(bootstrap, "localhost", 8090, 5);
     }
 
     private static void connect(Bootstrap bootstrap, String host, int port, int retry) {

@@ -1,5 +1,9 @@
 package com.limyel.chatroom.server;
 
+import com.limyel.chatroom.codec.PacketDecoder;
+import com.limyel.chatroom.codec.PacketEncoder;
+import com.limyel.chatroom.server.handler.LoginRequestHandler;
+import com.limyel.chatroom.server.handler.MsgRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -26,11 +30,14 @@ public class Server {
                     @Override
                     protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
                         // 该连接的处理逻辑链，责任链模式
-                        nioSocketChannel.pipeline().addLast(new ServerHandler());
+                        nioSocketChannel.pipeline().addLast(new PacketDecoder());
+                        nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new MsgRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });
 
-        bind(bootstrap, 8080);
+        bind(bootstrap, 8090);
     }
 
     private static void bind(ServerBootstrap bootstrap, int port) {

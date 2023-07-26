@@ -46,6 +46,11 @@ public class PacketCodeC {
     public ByteBuf encode(ByteBufAllocator byteBufAllocator, Packet packet) {
         // 创建 ByteBuf 对象
         ByteBuf byteBuf = byteBufAllocator.ioBuffer();
+
+        return encode(byteBuf, packet);
+    }
+
+    public ByteBuf encode(ByteBuf byteBuf, Packet packet) {
         // 序列化 Packet
         byte[] bytes = Serializer.DEFAULT.serialize(packet);
 
