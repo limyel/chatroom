@@ -26,7 +26,7 @@ public class SessionUtil {
     }
 
     public static void bindSession(String username, Channel channel) {
-        Session session = new Session(getUuid(), username);
+        Session session = new Session(IdUtil.getUuid(), username);
         bindSession(session, channel);
     }
 
@@ -47,10 +47,6 @@ public class SessionUtil {
 
     public static Channel getChannel(String uuid) {
         return uuidChannelMap.get(uuid);
-    }
-
-    public static String getUuid() {
-        return UUID.randomUUID().toString().split("-")[0];
     }
 
 }

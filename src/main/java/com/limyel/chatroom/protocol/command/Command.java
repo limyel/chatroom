@@ -11,4 +11,7 @@ public interface Command {
     Byte MSG_REQUEST = 3;
     Byte MSG_RESPONSE = 4;
 
+    Byte CREATE_GROUP_REQUEST = 5;
+    Byte CREATE_GROUP_RESPONSE = 6;
+
 }

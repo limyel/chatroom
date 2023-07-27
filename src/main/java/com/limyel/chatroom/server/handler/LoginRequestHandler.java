@@ -3,6 +3,7 @@ package com.limyel.chatroom.server.handler;
 import com.limyel.chatroom.protocol.request.LoginRequestPacket;
 import com.limyel.chatroom.protocol.response.LoginResponsePacket;
 import com.limyel.chatroom.session.Session;
+import com.limyel.chatroom.util.IdUtil;
 import com.limyel.chatroom.util.SessionUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -17,7 +18,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         // 校验登录
         if (valid(loginRequestPacket)) {
             String username = loginRequestPacket.getUsername();
-            String uuid = SessionUtil.getUuid();
+            String uuid = IdUtil.getUuid();
 
             loginResponsePacket.setSuccess(true);
             loginResponsePacket.setUsername(username);

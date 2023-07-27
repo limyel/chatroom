@@ -1,5 +1,8 @@
 package com.limyel.chatroom.client;
 
+import com.limyel.chatroom.client.console.ConsoleCommandManager;
+import com.limyel.chatroom.client.console.LoginCommand;
+import com.limyel.chatroom.client.handler.CreateGroupResponseHandler;
 import com.limyel.chatroom.client.handler.LoginResponseHandler;
 import com.limyel.chatroom.client.handler.MsgResponseHandler;
 import com.limyel.chatroom.codec.PacketDecoder;
@@ -39,6 +42,7 @@ public class Client {
                         nioSocketChannel.pipeline().addLast(new PacketDecoder());
                         nioSocketChannel.pipeline().addLast(new LoginResponseHandler());
                         nioSocketChannel.pipeline().addLast(new MsgResponseHandler());
+                        nioSocketChannel.pipeline().addLast(new CreateGroupResponseHandler());
                         nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });
@@ -69,37 +73,18 @@ public class Client {
      * @param channel
      */
     private static void startConsoleThread(Channel channel) {
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+        LoginCommand loginCommand = new LoginCommand();
+        Scanner scanner = new Scanner(System.in);
+
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                Scanner scanner = new Scanner(System.in);
                 if (SessionUtil.hasLogin(channel)) {
                     // 已登录
-                    String toUuid = scanner.nextLine();
-                    String msg = scanner.nextLine();
-
-                    MsgRequestPacket msgRequestPacket = new MsgRequestPacket();
-                    msgRequestPacket.setMsg(msg);
-                    msgRequestPacket.setToUuid(toUuid);
-
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), msgRequestPacket);
-                    channel.writeAndFlush(byteBuf);
+                    consoleCommandManager.exec(scanner, channel);
                 } else {
-                    System.out.println("请输入用户名：");
-                    String username = scanner.nextLine();
-                    System.out.println("请输入密码：");
-                    String password = scanner.nextLine();
-
-                    LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
-                    loginRequestPacket.setUsername(username);
-                    loginRequestPacket.setPassword(password);
-
-                    channel.writeAndFlush(loginRequestPacket);
-                    // 停一秒，等待消息
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                    // 未登录
+                    loginCommand.exec(scanner, channel);
                 }
             }
         }).start();
