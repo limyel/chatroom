@@ -3,7 +3,10 @@ package com.limyel.chatroom.server.handler;
 import com.limyel.chatroom.protocol.PacketCodeC;
 import com.limyel.chatroom.protocol.request.MsgRequestPacket;
 import com.limyel.chatroom.protocol.response.MsgResponsePacket;
+import com.limyel.chatroom.session.Session;
+import com.limyel.chatroom.util.SessionUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -12,11 +15,25 @@ import java.time.LocalDateTime;
 public class MsgRequestHandler extends SimpleChannelInboundHandler<MsgRequestPacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, MsgRequestPacket msgRequestPacket) throws Exception {
-        System.out.println(LocalDateTime.now() + "：收到客户端消息：" + msgRequestPacket.getMsg());
+        // 发送方的 Session
+        Session session = SessionUtil.getSession(channelHandlerContext.channel());
 
+        // 响应包
         MsgResponsePacket responsePacket = new MsgResponsePacket();
-        responsePacket.setMsg("服务端回复：" + msgRequestPacket.getMsg());
+        responsePacket.setFromUuid(session.getUuid());
+        responsePacket.setFromUsername(session.getUsername());
+        responsePacket.setMsg(msgRequestPacket.getMsg());
 
-        channelHandlerContext.channel().writeAndFlush(responsePacket);
+        // 接收方的 Channel
+        Channel toChannel = SessionUtil.getChannel(msgRequestPacket.getToUuid());
+
+        // 发送消息到接收方
+        if (SessionUtil.hasLogin(toChannel)) {
+            toChannel.writeAndFlush(responsePacket);
+        } else {
+            // todo 离线消息
+            System.err.println("[" + msgRequestPacket.getToUuid() + "] 不在线，发送失败");
+        }
+
     }
 }

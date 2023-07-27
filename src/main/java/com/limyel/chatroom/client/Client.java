@@ -6,8 +6,10 @@ import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.codec.Spliter;
 import com.limyel.chatroom.protocol.PacketCodeC;
+import com.limyel.chatroom.protocol.request.LoginRequestPacket;
 import com.limyel.chatroom.protocol.request.MsgRequestPacket;
-import com.limyel.chatroom.util.LoginUtil;
+import com.limyel.chatroom.session.Session;
+import com.limyel.chatroom.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
@@ -69,17 +71,35 @@ public class Client {
     private static void startConsoleThread(Channel channel) {
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                if (LoginUtil.hasLogin(channel)) {
+                Scanner scanner = new Scanner(System.in);
+                if (SessionUtil.hasLogin(channel)) {
                     // 已登录
-                    System.out.println("输入消息发送至服务端：");
-                    Scanner scanner = new Scanner(System.in);
+                    String toUuid = scanner.nextLine();
                     String msg = scanner.nextLine();
 
-                    // 发送消息
-                    MsgRequestPacket requestPacket = new MsgRequestPacket();
-                    requestPacket.setMsg(msg);
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), requestPacket);
+                    MsgRequestPacket msgRequestPacket = new MsgRequestPacket();
+                    msgRequestPacket.setMsg(msg);
+                    msgRequestPacket.setToUuid(toUuid);
+
+                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), msgRequestPacket);
                     channel.writeAndFlush(byteBuf);
+                } else {
+                    System.out.println("请输入用户名：");
+                    String username = scanner.nextLine();
+                    System.out.println("请输入密码：");
+                    String password = scanner.nextLine();
+
+                    LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+                    loginRequestPacket.setUsername(username);
+                    loginRequestPacket.setPassword(password);
+
+                    channel.writeAndFlush(loginRequestPacket);
+                    // 停一秒，等待消息
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }).start();

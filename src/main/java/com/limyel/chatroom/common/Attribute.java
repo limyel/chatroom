@@ -1,5 +1,6 @@
 package com.limyel.chatroom.common;
 
+import com.limyel.chatroom.session.Session;
 import io.netty.util.AttributeKey;
 
 /**
@@ -11,5 +12,10 @@ public interface Attribute {
      * 已登录
      */
     AttributeKey<Boolean> LOGIN = AttributeKey.newInstance("login");
+
+    /**
+     * session
+     */
+    AttributeKey<Session> SESSION = AttributeKey.newInstance("session");
 
 }

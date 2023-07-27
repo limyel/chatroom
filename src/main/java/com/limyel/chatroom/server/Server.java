@@ -21,8 +21,8 @@ public class Server {
         NioEventLoopGroup worker = new NioEventLoopGroup();
 
         // 引导类，负责服务端的启动
-        ServerBootstrap bootstrap = new ServerBootstrap();
-        bootstrap
+        ServerBootstrap serverBootstrap = new ServerBootstrap();
+        serverBootstrap
                 // 指定线程模型
                 .group(boss, worker)
                 // 指定 IO 模型
@@ -42,7 +42,7 @@ public class Server {
                     }
                 });
 
-        bind(bootstrap, 8090);
+        bind(serverBootstrap, 8090);
     }
 
     private static void bind(ServerBootstrap bootstrap, int port) {

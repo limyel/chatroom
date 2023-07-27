@@ -9,6 +9,10 @@ import lombok.Setter;
 @Setter
 public class MsgResponsePacket extends Packet {
 
+    private String fromUuid;
+
+    private String fromUsername;
+
     private String msg;
 
     @Override

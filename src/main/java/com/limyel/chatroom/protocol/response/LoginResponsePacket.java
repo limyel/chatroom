@@ -9,6 +9,10 @@ import lombok.Setter;
 @Setter
 public class LoginResponsePacket extends Packet {
 
+    private String uuid;
+
+    private String username;
+
     private Boolean success;
 
     private String reason;

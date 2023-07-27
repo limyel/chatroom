@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 public class MsgRequestPacket extends Packet {
 
+    private String toUuid;
+
     private String msg;
 
     @Override

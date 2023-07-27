@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 public class MsgResponseHandler extends SimpleChannelInboundHandler<MsgResponsePacket> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, MsgResponsePacket msgResponsePacket) throws Exception {
-        System.out.println(LocalDateTime.now() + "：收到服务端消息：" + msgResponsePacket.getMsg());
+        String fromUuid = msgResponsePacket.getFromUuid();
+        String fromUsername = msgResponsePacket.getFromUsername();
+        System.out.println(fromUuid + ":" + fromUsername + " -> " + msgResponsePacket .getMsg());
     }
 }
