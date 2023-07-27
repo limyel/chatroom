@@ -1,12 +1,8 @@
 package com.limyel.chatroom.protocol;
 
 import com.limyel.chatroom.protocol.command.Command;
-import com.limyel.chatroom.protocol.request.CreateGroupRequestPacket;
-import com.limyel.chatroom.protocol.request.LoginRequestPacket;
-import com.limyel.chatroom.protocol.request.MsgRequestPacket;
-import com.limyel.chatroom.protocol.response.CreateGroupResponsePacket;
-import com.limyel.chatroom.protocol.response.LoginResponsePacket;
-import com.limyel.chatroom.protocol.response.MsgResponsePacket;
+import com.limyel.chatroom.protocol.request.*;
+import com.limyel.chatroom.protocol.response.*;
 import com.limyel.chatroom.serialize.Serializer;
 import com.limyel.chatroom.serialize.impl.JsonSerializer;
 import io.netty.buffer.ByteBuf;
@@ -35,6 +31,12 @@ public class PacketCodeC {
         packetTypeMap.put(Command.MSG_RESPONSE, MsgResponsePacket.class);
         packetTypeMap.put(Command.CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
         packetTypeMap.put(Command.CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        packetTypeMap.put(Command.JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
+        packetTypeMap.put(Command.JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
+        packetTypeMap.put(Command.QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        packetTypeMap.put(Command.QUIT_GROUP_REPONSE, QuitGroupResponsePacket.class);
+        packetTypeMap.put(Command.LIST_GROUP_MEMBERS_REQUEST, ListGroupMembersRequestPacket.class);
+        packetTypeMap.put(Command.LIST_GROUP_MEMBERS_RESPONSE, ListGroupMembersResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JsonSerializer();

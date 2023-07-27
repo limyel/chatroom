@@ -1,20 +1,13 @@
 package com.limyel.chatroom.client;
 
 import com.limyel.chatroom.client.console.ConsoleCommandManager;
-import com.limyel.chatroom.client.console.LoginCommand;
-import com.limyel.chatroom.client.handler.CreateGroupResponseHandler;
-import com.limyel.chatroom.client.handler.LoginResponseHandler;
-import com.limyel.chatroom.client.handler.MsgResponseHandler;
+import com.limyel.chatroom.client.console.LoginConsoleCommand;
+import com.limyel.chatroom.client.handler.*;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.codec.Spliter;
-import com.limyel.chatroom.protocol.PacketCodeC;
-import com.limyel.chatroom.protocol.request.LoginRequestPacket;
-import com.limyel.chatroom.protocol.request.MsgRequestPacket;
-import com.limyel.chatroom.session.Session;
 import com.limyel.chatroom.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -43,6 +36,9 @@ public class Client {
                         nioSocketChannel.pipeline().addLast(new LoginResponseHandler());
                         nioSocketChannel.pipeline().addLast(new MsgResponseHandler());
                         nioSocketChannel.pipeline().addLast(new CreateGroupResponseHandler());
+                        nioSocketChannel.pipeline().addLast(new JoinGroupResponseHandler());
+                        nioSocketChannel.pipeline().addLast(new QuitGroupResponseHandler());
+                        nioSocketChannel.pipeline().addLast(new ListGroupMembersResponseHandler());
                         nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }
                 });
@@ -74,7 +70,7 @@ public class Client {
      */
     private static void startConsoleThread(Channel channel) {
         ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
-        LoginCommand loginCommand = new LoginCommand();
+        LoginConsoleCommand loginCommand = new LoginConsoleCommand();
         Scanner scanner = new Scanner(System.in);
 
         new Thread(() -> {

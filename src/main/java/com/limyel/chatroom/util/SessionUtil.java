@@ -3,6 +3,7 @@ package com.limyel.chatroom.util;
 import com.limyel.chatroom.common.Attribute;
 import com.limyel.chatroom.session.Session;
 import io.netty.channel.Channel;
+import io.netty.channel.group.ChannelGroup;
 
 import java.util.Map;
 import java.util.UUID;
@@ -14,6 +15,11 @@ public class SessionUtil {
      * uuid 和 Channel 的映射
      */
     private static final Map<String, Channel> uuidChannelMap = new ConcurrentHashMap<>();
+
+    /**
+     * groupId 和 ChannelGroup 的映射
+     */
+    private static final Map<String, ChannelGroup> channelGroupMap = new ConcurrentHashMap<>();
 
     /**
      * 绑定 session 和 channel
@@ -47,6 +53,10 @@ public class SessionUtil {
 
     public static Channel getChannel(String uuid) {
         return uuidChannelMap.get(uuid);
+    }
+
+    public static ChannelGroup getChannelGroup(String groupId) {
+        return channelGroupMap.get(groupId);
     }
 
 }

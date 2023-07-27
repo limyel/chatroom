@@ -3,10 +3,7 @@ package com.limyel.chatroom.server;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.codec.Spliter;
-import com.limyel.chatroom.server.handler.AuthHandler;
-import com.limyel.chatroom.server.handler.CreateGroupRequestHandler;
-import com.limyel.chatroom.server.handler.LoginRequestHandler;
-import com.limyel.chatroom.server.handler.MsgRequestHandler;
+import com.limyel.chatroom.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -39,6 +36,8 @@ public class Server {
                         nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
                         nioSocketChannel.pipeline().addLast(new AuthHandler());
                         nioSocketChannel.pipeline().addLast(new CreateGroupRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new JoinGroupRequestHandler());
+                        nioSocketChannel.pipeline().addLast(new QuitGroupRequestHandler());
                         nioSocketChannel.pipeline().addLast(new MsgRequestHandler());
                         nioSocketChannel.pipeline().addLast(new PacketEncoder());
                     }
