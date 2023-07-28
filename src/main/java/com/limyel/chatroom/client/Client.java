@@ -34,6 +34,7 @@ public class Client {
                         nioSocketChannel.pipeline().addLast(new Spliter());
                         nioSocketChannel.pipeline().addLast(new PacketDecoder());
                         nioSocketChannel.pipeline().addLast(new LoginResponseHandler());
+                        nioSocketChannel.pipeline().addLast(new LogoutResponseHandler());
                         nioSocketChannel.pipeline().addLast(new MsgResponseHandler());
                         nioSocketChannel.pipeline().addLast(new CreateGroupResponseHandler());
                         nioSocketChannel.pipeline().addLast(new JoinGroupResponseHandler());

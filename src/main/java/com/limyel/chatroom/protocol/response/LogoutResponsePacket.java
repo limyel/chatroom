@@ -1,4 +1,4 @@
-package com.limyel.chatroom.protocol.request;
+package com.limyel.chatroom.protocol.response;
 
 import com.limyel.chatroom.protocol.Packet;
 import com.limyel.chatroom.protocol.command.Command;
@@ -7,10 +7,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LogoutRequestPacket extends Packet {
+public class LogoutResponsePacket extends Packet {
+
+    private Boolean success;
 
     @Override
     public Byte getCommand() {
-        return Command.LOGOUT_REQUEST;
+        return Command.LOGOUT_RESPONSE;
     }
 }
