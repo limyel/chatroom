@@ -6,7 +6,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 /**
- *
+ * 分包
+ * 需要维护每个 Channel 读到的数据，有状态，所以不能用单例模式
  */
 public class Spliter extends LengthFieldBasedFrameDecoder {
 

@@ -8,6 +8,12 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 
 public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGroupRequestPacket> {
+
+    public static final JoinGroupRequestHandler INSTANCE = new JoinGroupRequestHandler();
+
+    private JoinGroupRequestHandler() {
+
+    }
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, JoinGroupRequestPacket joinGroupRequestPacket) throws Exception {
         String groupId = joinGroupRequestPacket.getGroupId();
@@ -19,7 +25,8 @@ public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGro
             joinGroupResponsePacket.setSuccess(true);
             joinGroupResponsePacket.setGroupId(groupId);
 
-            channelHandlerContext.channel().writeAndFlush(joinGroupResponsePacket);
+            // 缩短时间传播路径，略过其他 OutBound，直接找到第一个 OutBound
+            channelHandlerContext.writeAndFlush(joinGroupResponsePacket);
         }
     }
 }

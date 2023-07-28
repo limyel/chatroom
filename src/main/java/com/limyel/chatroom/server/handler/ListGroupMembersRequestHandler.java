@@ -13,6 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListGroupMembersRequestHandler extends SimpleChannelInboundHandler<ListGroupMembersRequestPacket> {
+
+    public static final ListGroupMembersRequestHandler INSTANCE = new ListGroupMembersRequestHandler();
+
+    private ListGroupMembersRequestHandler() {
+
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, ListGroupMembersRequestPacket listGroupMembersRequestPacket) throws Exception {
         String groupId = listGroupMembersRequestPacket.getGroupId();

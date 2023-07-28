@@ -13,6 +13,13 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import java.time.LocalDateTime;
 
 public class MsgRequestHandler extends SimpleChannelInboundHandler<MsgRequestPacket> {
+
+    public static final MsgRequestHandler INSTANCE = new MsgRequestHandler();
+
+    private MsgRequestHandler() {
+
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, MsgRequestPacket msgRequestPacket) throws Exception {
         // 发送方的 Session

@@ -1,5 +1,6 @@
 package com.limyel.chatroom.server;
 
+import com.limyel.chatroom.codec.PacketCodecHandler;
 import com.limyel.chatroom.codec.PacketDecoder;
 import com.limyel.chatroom.codec.PacketEncoder;
 import com.limyel.chatroom.codec.Spliter;
@@ -32,14 +33,10 @@ public class Server {
                         // 该连接的处理逻辑链，责任链模式
                         // 拆包
                         nioSocketChannel.pipeline().addLast(new Spliter());
-                        nioSocketChannel.pipeline().addLast(new PacketDecoder());
+                        nioSocketChannel.pipeline().addLast(PacketCodecHandler.INSTANCE);
                         nioSocketChannel.pipeline().addLast(new LoginRequestHandler());
                         nioSocketChannel.pipeline().addLast(new AuthHandler());
-                        nioSocketChannel.pipeline().addLast(new CreateGroupRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new JoinGroupRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new QuitGroupRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new MsgRequestHandler());
-                        nioSocketChannel.pipeline().addLast(new PacketEncoder());
+                        nioSocketChannel.pipeline().addLast(IMHandler.INSTANCE);
                     }
                 });
 

@@ -14,6 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateGroupRequestHandler extends SimpleChannelInboundHandler<CreateGroupRequestPacket> {
+
+    public static final CreateGroupRequestHandler INSTANCE = new CreateGroupRequestHandler();
+
+    private CreateGroupRequestHandler() {
+
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, CreateGroupRequestPacket createGroupRequestPacket) throws Exception {
         List<String> uuidList = createGroupRequestPacket.getUuidList();
